@@ -119,4 +119,36 @@ public class Terminal {
      */
     private void command(String commandString) {
     }
+
+    public static void printGrid(int[][] a)
+    {
+        System.out.println("            Welcome to the 2048 game!!!");
+        System.out.println("      Use the WASD keys to slide the table!");
+        System.out.format("+-----------+-----------+-----------+-----------+");
+        System.out.format("%n|           |           |           |           |%n");
+        for(int i = 0; i < 4; i++)
+        {
+            for(int j = 0; j < 4; j++)
+            {
+                System.out.printf("|%6d     ", a[i][j]);
+
+            }
+            System.out.printf("|");
+            System.out.format("%n|           |           |           |           |%n");
+            System.out.format("+-----------+-----------+-----------+-----------+");
+            if (i != 3){
+                System.out.format("%n|           |           |           |           |%n");
+            }
+        }
+    }
+
+    public static void main(String[] args){
+        int[][] a = {
+                {0, 0, 0, 0},
+                {0, 32, 0, 0},
+                {0, 0, 16, 128},
+                {0, 0, 0, 0}
+        };
+        printGrid(a);
+    }
 }
