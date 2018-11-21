@@ -1,4 +1,5 @@
 package com.codecool.termlib;
+import java.io.*;
 
 public class Terminal {
     /**
@@ -40,6 +41,8 @@ public class Terminal {
      * Might reset cursor position.
      */
     public void clearScreen() {
+        String commandString = CONTROL_CODE + CLEAR + CONTROL_CODE + MOVE;
+        command(commandString);
     }
 
     /**
@@ -118,14 +121,14 @@ public class Terminal {
      * @param commandString The unique part of a command sequence.
      */
     private void command(String commandString) {
+        System.out.println(commandString);
     }
 
     public static void printGrid(int[][] a)
     {
-        System.out.println("            Welcome to the 2048 game!!!");
-        System.out.println("      Use the WASD keys to slide the table!");
-        System.out.format("+-----------+-----------+-----------+-----------+");
-        System.out.format("%n|           |           |           |           |%n");
+        System.out.println("");
+        System.out.format("+-----------+-----------+-----------+-----------+\n");
+        System.out.format("%n|           |           |           |           |%n\n");
         for(int i = 0; i < 4; i++)
         {
             for(int j = 0; j < 4; j++)
@@ -133,22 +136,81 @@ public class Terminal {
                 System.out.printf("|%6d     ", a[i][j]);
 
             }
-            System.out.printf("|");
-            System.out.format("%n|           |           |           |           |%n");
-            System.out.format("+-----------+-----------+-----------+-----------+");
+            System.out.printf("|\n");
+            System.out.format("%n|           |           |           |           |%n\n");
+            System.out.format("+-----------+-----------+-----------+-----------+\n");
             if (i != 3){
-                System.out.format("%n|           |           |           |           |%n");
+                System.out.format("%n|           |           |           |           |%n\n");
             }
         }
     }
 
-    public static void main(String[] args){
-        int[][] a = {
+    public void setTerminalRawNoEcho() throws IOException, InterruptedException {
+        String[] cmd = {"sh", "-c", "stty raw -echo </dev/tty"};
+        Runtime.getRuntime().exec(cmd).waitFor();
+    }
+    public void setTerminalCookedEcho() throws IOException, InterruptedException {
+        String[] cmd = {"sh", "-c", "stty cooked echo </dev/tty"};
+        Runtime.getRuntime().exec(cmd).waitFor();
+    }
+    public String getNextMove() throws IOException {
+        char nextMove = (char) System.in.read();
+        switch (nextMove) {
+        case 'a':
+            return "left";
+        case 's':
+            return "down";
+        case 'd':
+            return "right";
+        case 'w':
+            return "up";
+        case 'q':
+            return "quit";
+        default:
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            Terminal t = new Terminal();
+            t.setTerminalRawNoEcho();
+            t.clearScreen();
+            int[][] a = {
                 {0, 0, 0, 0},
                 {0, 32, 0, 0},
                 {0, 0, 16, 128},
                 {0, 0, 0, 0}
-        };
-        printGrid(a);
+            };
+            while (true) {
+                try {
+                    String move = t.getNextMove();
+                    if (move.equals("quit")) {
+                        break; // while
+                    } else if (move.equals("left")) {
+                        a[1][0]++;
+                    } else if (move.equals("right")) {
+                        a[1][3]++;
+                    } else if (move.equals("up")) {
+                        a[0][1]++;
+                    } else if (move.equals("down")) {
+                        a[3][2]++;
+                    } else {
+                        continue;
+                    }
+                    t.clearScreen();
+                    printGrid(a);
+                } catch(IOException e) {
+                    System.err.println("IOException");
+                }
+            }
+            t.setTerminalCookedEcho();
+        } catch (IOException e) {
+            System.err.println("IOException");
+        }
+        catch (InterruptedException e) {
+            System.err.println("InterruptedException");
+        }
     }
 }
+
