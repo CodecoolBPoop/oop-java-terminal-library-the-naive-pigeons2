@@ -1,4 +1,5 @@
 package com.codecool.termlib;
+import java.io.*;
 
 public class Terminal {
     /**
@@ -40,6 +41,8 @@ public class Terminal {
      * Might reset cursor position.
      */
     public void clearScreen() {
+        String commandString = CONTROL_CODE + CLEAR + CONTROL_CODE + MOVE;
+        command(commandString);
     }
 
     /**
@@ -118,5 +121,56 @@ public class Terminal {
      * @param commandString The unique part of a command sequence.
      */
     private void command(String commandString) {
+        System.out.println(commandString);
+    }
+    public void setTerminalRawNoEcho() throws IOException, InterruptedException {
+        String[] cmd = {"sh", "-c", "stty raw -echo </dev/tty"};
+        Runtime.getRuntime().exec(cmd).waitFor();
+    }
+    public void setTerminalCookedEcho() throws IOException, InterruptedException {
+        String[] cmd = {"sh", "-c", "stty cooked echo </dev/tty"};
+        Runtime.getRuntime().exec(cmd).waitFor();
+    }
+    public String getNextMove() throws IOException {
+        char nextMove = (char) System.in.read();
+        switch (nextMove) {
+        case 'a':
+            return "left";
+        case 's':
+            return "down";
+        case 'd':
+            return "right";
+        case 'w':
+            return "up";
+        case 'q':
+            return "quit";
+        default:
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            Terminal t = new Terminal();
+            t.setTerminalRawNoEcho();
+            t.clearScreen();
+            while (true) {
+                try {
+                    String move = t.getNextMove();
+                    System.out.println(move);
+                    if (move.equals("quit")) {
+                        break; // while
+                    }
+                } catch(IOException e) {
+                    System.err.println("IOException");
+                }
+            }
+            t.setTerminalCookedEcho();
+        } catch (IOException e) {
+            System.err.println("IOException");
+        }
+        catch (InterruptedException e) {
+            System.err.println("InterruptedException");
+        }
     }
 }
