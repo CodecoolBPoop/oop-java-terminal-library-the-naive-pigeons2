@@ -126,23 +126,22 @@ public class Terminal {
 
     public static void printGrid(int[][] a)
     {
-        System.out.println("");
-        System.out.format("+-----------+-----------+-----------+-----------+\n");
-        System.out.format("%n|           |           |           |           |%n\n");
-        for(int i = 0; i < 4; i++)
-        {
-            for(int j = 0; j < 4; j++)
-            {
+        System.out.println("            Welcome to the 2048 game!!!\r");
+        System.out.println("      Use the wasd keys to slide the table!\r");
+        System.out.format("+-----------+-----------+-----------+-----------+\r");
+        System.out.format("%n|           |           |           |           |%n\r");
+        for(int i = 0; i < 4; i++) {
+            for(int j = 0; j < 4; j++) {
                 System.out.printf("|%6d     ", a[i][j]);
-
             }
-            System.out.printf("|\n");
-            System.out.format("%n|           |           |           |           |%n\n");
-            System.out.format("+-----------+-----------+-----------+-----------+\n");
+            System.out.printf("|\r");
+            System.out.format("%n|           |           |           |           |%n\r");
+            System.out.format("+-----------+-----------+-----------+-----------+\r");
             if (i != 3){
-                System.out.format("%n|           |           |           |           |%n\n");
+                System.out.format("%n|           |           |           |           |%n\r");
             }
         }
+        System.out.println("\r");
     }
 
     public void setTerminalRawNoEcho() throws IOException, InterruptedException {
@@ -185,6 +184,9 @@ public class Terminal {
             while (true) {
                 try {
                     String move = t.getNextMove();
+                    if (move == null) {
+                        continue;
+                    }
                     if (move.equals("quit")) {
                         break; // while
                     } else if (move.equals("left")) {
@@ -195,8 +197,6 @@ public class Terminal {
                         a[0][1]++;
                     } else if (move.equals("down")) {
                         a[3][2]++;
-                    } else {
-                        continue;
                     }
                     t.clearScreen();
                     printGrid(a);
