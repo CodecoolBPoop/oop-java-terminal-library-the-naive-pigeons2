@@ -126,7 +126,6 @@ public class Terminal {
 
     public static void printGrid(int[][] a)
     {
-        System.out.println("            Welcome to the 2048 game!!!\r");
         System.out.println("      Use the wasd keys to slide the table!\r");
         System.out.format("+-----------+-----------+-----------+-----------+\r");
         System.out.format("%n|           |           |           |           |%n\r");
