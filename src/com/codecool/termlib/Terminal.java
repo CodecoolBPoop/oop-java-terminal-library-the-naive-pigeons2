@@ -10,7 +10,6 @@ public class Terminal {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_YELLOW = "\u001B[33m";
 
-
     /**
      * The beginning of control sequences.
      */
@@ -149,10 +148,11 @@ public class Terminal {
                     System.out.printf("|" + ANSI_CYAN +  "%6d     " + ANSI_RESET, a[i][j]);
                 } else if (a[i][j] == 16) {
                     System.out.printf("|" + ANSI_GREEN +  "%6d     " + ANSI_RESET, a[i][j]);
-                }else if (a[i][j] == 32) {
+                }else if (a[i][j] >= 32) {
                     System.out.printf("|" + ANSI_BLUE +  "%6d     " + ANSI_RESET, a[i][j]);
                 } else {
-                    System.out.printf("|%6d     ", a[i][j]);
+                    String point = ".";
+                    System.out.printf("|%6s     ", point);
                 }
             }
             System.out.printf("|\r");
