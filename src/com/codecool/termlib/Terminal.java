@@ -2,6 +2,14 @@ package com.codecool.termlib;
 import java.io.*;
 
 public class Terminal {
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+
     /**
      * The beginning of control sequences.
      */
@@ -131,7 +139,20 @@ public class Terminal {
         System.out.format("%n|           |           |           |           |%n\r");
         for(int i = 0; i < 4; i++) {
             for(int j = 0; j < 4; j++) {
-                System.out.printf("|%6d     ", a[i][j]);
+                if (a[i][j] == 2) {
+                    System.out.printf("|" + ANSI_YELLOW +  "%6d     " + ANSI_RESET, a[i][j]);
+                } else if (a[i][j] == 4) {
+                    System.out.printf("|" + ANSI_PURPLE +  "%6d     " + ANSI_RESET, a[i][j]);
+                } else if (a[i][j] == 8) {
+                    System.out.printf("|" + ANSI_CYAN +  "%6d     " + ANSI_RESET, a[i][j]);
+                } else if (a[i][j] == 16) {
+                    System.out.printf("|" + ANSI_GREEN +  "%6d     " + ANSI_RESET, a[i][j]);
+                }else if (a[i][j] >= 32) {
+                    System.out.printf("|" + ANSI_BLUE +  "%6d     " + ANSI_RESET, a[i][j]);
+                } else {
+                    String point = ".";
+                    System.out.printf("|%6s     ", point);
+                }
             }
             System.out.printf("|\r");
             System.out.format("%n|           |           |           |           |%n\r");
